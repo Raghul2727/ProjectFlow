@@ -254,7 +254,7 @@ function App() {
   // --------------------------------------------------
 
   useEffect(() => {
-    fetch("http://localhost:8080/api/projects")
+fetch(`${API_URL}/api/projects`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to load projects");
@@ -293,7 +293,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/projects/${selectedProject.id}`,
+        `${API_URL}/api/projects/${selectedProject.id}`
         {
           method: "PUT",
           headers: {
@@ -361,7 +361,7 @@ function App() {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/projects/${selectedProject.id}`,
+        `${API_URL}/api/projects/${selectedProject.id}`
         {
           method: "DELETE",
         }
@@ -403,7 +403,7 @@ function App() {
 
     try {
       const response = await fetch(
-        "http://localhost:8080/api/projects",
+       `${API_URL}/api/projects`
         {
           method: "POST",
           headers: {
