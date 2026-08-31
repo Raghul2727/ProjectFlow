@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
+c
 const API_URL =
   import.meta.env.VITE_API_URL ||
   "http://localhost:8080";
@@ -293,7 +294,7 @@ fetch(`${API_URL}/api/projects`)
 
     try {
       const response = await fetch(
-        `${API_URL}/api/projects/${selectedProject.id}`
+        `${API_URL}/api/projects/${selectedProject.id}`,
         {
           method: "PUT",
           headers: {
@@ -361,7 +362,7 @@ fetch(`${API_URL}/api/projects`)
 
     try {
       const response = await fetch(
-        `${API_URL}/api/projects/${selectedProject.id}`
+        `${API_URL}/api/projects/${selectedProject.id}`,
         {
           method: "DELETE",
         }
@@ -403,7 +404,7 @@ fetch(`${API_URL}/api/projects`)
 
     try {
       const response = await fetch(
-       `${API_URL}/api/projects`
+       `${API_URL}/api/projects`,
         {
           method: "POST",
           headers: {
