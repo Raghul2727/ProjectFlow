@@ -8,7 +8,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/projects")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = {
+    "http://localhost:5173",
+    "https://vibrant-determination-production-d399.up.railway.app"
+})
 public class ProjectController {
 
     private final ProjectRepository projectRepository;
