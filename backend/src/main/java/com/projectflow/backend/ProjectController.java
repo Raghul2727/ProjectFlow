@@ -10,8 +10,7 @@ import java.util.List;
 @RequestMapping("/api/projects")
 @CrossOrigin(origins = {
     "http://localhost:5173",
-    "https://enchanting-balance-production-0940.up.railway.app",
-    "https://vibrant-determination-production-d399.up.railway.app"
+    "https://raghul2727.github.io"
 })
 public class ProjectController {
 
