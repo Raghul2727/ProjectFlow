@@ -22,11 +22,9 @@ Create a Web Service from this GitHub repository with these settings:
 - Health check path: `/api/health`
 - Instance: Free
 
-Configure these environment variables:
-
-- `SPRING_DATASOURCE_URL`
-- `SPRING_DATASOURCE_USERNAME`
-- `SPRING_DATASOURCE_PASSWORD`
+Configure the `DATABASE_URL` environment variable with Neon's pooled connection
+string. The application converts it to the JDBC format internally, so the
+credential stays in a single secret value.
 
 ## 3. Deploy the frontend on GitHub Pages
 
@@ -43,6 +41,5 @@ The frontend will be available at:
 
 ## Local development
 
-Start PostgreSQL and set the same three Spring datasource variables before
-running the backend. The frontend defaults to `http://localhost:8080` when
-`VITE_API_URL` is not set.
+Start PostgreSQL and set `DATABASE_URL` before running the backend. The frontend
+defaults to `http://localhost:8080` when `VITE_API_URL` is not set.
