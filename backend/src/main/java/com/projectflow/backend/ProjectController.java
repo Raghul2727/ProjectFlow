@@ -10,7 +10,9 @@ import java.util.List;
 @RequestMapping("/api/projects")
 @CrossOrigin(origins = {
     "http://localhost:5173",
-    "https://raghul2727.github.io"
+    "https://raghul2727.github.io",
+    "https://raghulanandan.in",
+    "https://www.raghulanandan.in"
 })
 public class ProjectController {
 
