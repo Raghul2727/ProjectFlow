@@ -3,7 +3,7 @@ import "./App.css";
 
 const API_URL =
   import.meta.env.VITE_API_URL ||
-  "https://projectflow-api-dzkb.onrender.com";
+  "http://localhost:8080";
 
 const stages = [
   "Requirements",
@@ -236,6 +236,9 @@ function App() {
   // --------------------------------------------------
 
   const [loading, setLoading] = useState(true);
+  const [slowLoading, setSlowLoading] = useState(false);
+  const [loadError, setLoadError] = useState(false);
+  const [retryKey, setRetryKey] = useState(0);
   const [projects, setProjects] = useState([]);
   const [selectedProject, setSelectedProject] = useState(null);
   const [statusFilter, setStatusFilter] = useState("All Projects");
@@ -254,7 +257,9 @@ function App() {
   // --------------------------------------------------
 
   useEffect(() => {
-fetch(`${API_URL}/api/projects`)
+    const controller = new AbortController();
+    const slowTimer = window.setTimeout(() => setSlowLoading(true), 8000);
+    fetch(`${API_URL}/api/projects`, { signal: controller.signal })
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to load projects");
@@ -267,12 +272,28 @@ fetch(`${API_URL}/api/projects`)
 
         setProjects(formattedProjects);
         setLoading(false);
+        setSlowLoading(false);
+        window.clearTimeout(slowTimer);
       })
       .catch((error) => {
+        if (error.name === "AbortError") return;
         console.error("Error loading projects:", error);
         setLoading(false);
+        setLoadError(true);
+        window.clearTimeout(slowTimer);
       });
-  }, []);
+    return () => {
+      controller.abort();
+      window.clearTimeout(slowTimer);
+    };
+  }, [retryKey]);
+
+  const retryLoading = () => {
+    setLoading(true);
+    setSlowLoading(false);
+    setLoadError(false);
+    setRetryKey((current) => current + 1);
+  };
 
 
   // --------------------------------------------------
@@ -1209,6 +1230,15 @@ fetch(`${API_URL}/api/projects`)
           <p>Project Status Management</p>
         </div>
 
+
+        <section className="project-intro" aria-label="About ProjectFlow">
+          <div>
+            <strong>About this project</strong>
+            <p>ProjectFlow is a project-status dashboard for following work from requirements through approvals, development, QA, UAT and release. It brings stage, status, priority, owner and deadline into one view.</p>
+          </div>
+          <a href="https://raghulanandan.in/#case-study" target="_blank" rel="noreferrer">Read the case study ↗</a>
+        </section>
+
         <div className="user-area">
           <span>BA View</span>
           <span className="user-name">Raghul</span>
@@ -1605,13 +1635,16 @@ fetch(`${API_URL}/api/projects`)
 
             {loading ? (
 
-              <div
-                style={{
-                  padding: "30px",
-                  textAlign: "center",
-                }}
-              >
-                Loading projects...
+              <div className="load-state" role="status">
+                <strong>Loading project data...</strong>
+                {slowLoading && <p>The data service is starting after a quiet period. This can take about a minute. The project overview above is available now.</p>}
+              </div>
+
+            ) : loadError ? (
+              <div className="load-state" role="alert">
+                <strong>Project data could not be loaded.</strong>
+                <p>The project overview and case study are still available. Please try loading the data again.</p>
+                <button type="button" onClick={retryLoading}>Retry loading</button>
               </div>
 
             ) : filteredProjects.length === 0 ? (
@@ -1722,3 +1755,4 @@ fetch(`${API_URL}/api/projects`)
 }
 
 export default App;
+
