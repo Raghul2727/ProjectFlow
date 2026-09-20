@@ -1119,3 +1119,25 @@ td small {
   line-height: 1.4;
   font-weight: 500;
 }
+
+.project-intro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 24px;
+  padding: 20px 24px;
+  border: 1px solid #cbd9eb;
+  border-radius: 14px;
+  background: #edf4ff;
+}
+.project-intro strong { color: #173a68; font-size: 16px; }
+.project-intro p { max-width: 860px; margin: 7px 0 0; color: #40536b; line-height: 1.5; }
+.project-intro a { flex: none; color: #1457a1; font-weight: 700; text-decoration: none; }
+.project-intro a:hover { text-decoration: underline; }
+.load-state { padding: 28px; text-align: center; }
+.load-state strong { color: #173a68; }
+.load-state p { max-width: 550px; margin: 8px auto 0; color: #51627a; line-height: 1.5; }
+.load-state button { margin-top: 15px; padding: 9px 15px; border: 0; border-radius: 8px; background: #1761ad; color: #fff; font-weight: 700; }
+@media (max-width: 700px) { .project-intro { display: block; } .project-intro a { display: inline-block; margin-top: 12px; } }
+
