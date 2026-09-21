@@ -118,6 +118,14 @@ const formatProject = (project) => ({
   updatedAt: project.updatedAt,
 });
 
+const showcaseProjects = [
+  { id: 1, name: "Motor Insurance Enhancement", description: "Premium calculation improvement", priority: "Medium", deadline: "30 Aug 2026", stage: "Development", status: "In Progress", owner: "Arun", projectType: "Enhancement" },
+  { id: 2, name: "Claims Portal Enhancement", description: "Improve claim submission", priority: "High", deadline: "02 Sep 2026", stage: "Internal QA", status: "In Progress", owner: "Vijay", projectType: "Enhancement" },
+  { id: 3, name: "Agent Dashboard Upgrade", description: "Dashboard and reporting", priority: "Medium", deadline: "05 Sep 2026", stage: "UAT", status: "UAT", owner: "Suresh", projectType: "Enhancement" },
+  { id: 4, name: "Customer Mobile App", description: "Customer policy services", priority: "Medium", deadline: "15 Sep 2026", stage: "Internal Approval", status: "Pending Approval", owner: "Raghul", projectType: "New Development" },
+  { id: 5, name: "Policy Renewal Automation", description: "Automated renewal notification", priority: "High", deadline: "16 Jul 2026", stage: "Live", status: "Live", owner: "Praveen", projectType: "New Development" },
+];
+
 
 function App() {
 
@@ -235,11 +243,7 @@ function App() {
   // DASHBOARD
   // --------------------------------------------------
 
-  const [loading, setLoading] = useState(true);
-  const [slowLoading, setSlowLoading] = useState(false);
-  const [loadError, setLoadError] = useState(false);
-  const [retryKey, setRetryKey] = useState(0);
-  const [projects, setProjects] = useState([]);
+  const [projects, setProjects] = useState(showcaseProjects);
   const [selectedProject, setSelectedProject] = useState(null);
   const [statusFilter, setStatusFilter] = useState("All Projects");
 
@@ -258,7 +262,6 @@ function App() {
 
   useEffect(() => {
     const controller = new AbortController();
-    const slowTimer = window.setTimeout(() => setSlowLoading(true), 8000);
     fetch(`${API_URL}/api/projects`, { signal: controller.signal })
       .then((response) => {
         if (!response.ok) {
@@ -270,30 +273,16 @@ function App() {
       .then((data) => {
         const formattedProjects = data.map(formatProject);
 
-        setProjects(formattedProjects);
-        setLoading(false);
-        setSlowLoading(false);
-        window.clearTimeout(slowTimer);
+        if (formattedProjects.length > 0) setProjects(formattedProjects);
       })
       .catch((error) => {
         if (error.name === "AbortError") return;
-        console.error("Error loading projects:", error);
-        setLoading(false);
-        setLoadError(true);
-        window.clearTimeout(slowTimer);
+        console.info("Live data is temporarily unavailable; showing the complete ProjectFlow showcase.");
       });
     return () => {
       controller.abort();
-      window.clearTimeout(slowTimer);
     };
-  }, [retryKey]);
-
-  const retryLoading = () => {
-    setLoading(true);
-    setSlowLoading(false);
-    setLoadError(false);
-    setRetryKey((current) => current + 1);
-  };
+  }, []);
 
 
   // --------------------------------------------------
@@ -1231,14 +1220,6 @@ function App() {
         </div>
 
 
-        <section className="project-intro" aria-label="About ProjectFlow">
-          <div>
-            <strong>About this project</strong>
-            <p>ProjectFlow is a project-status dashboard for following work from requirements through approvals, development, QA, UAT and release. It brings stage, status, priority, owner and deadline into one view.</p>
-          </div>
-          <a href="https://raghulanandan.in/#case-study" target="_blank" rel="noreferrer">Read the case study ↗</a>
-        </section>
-
         <div className="user-area">
           <span>BA View</span>
           <span className="user-name">Raghul</span>
@@ -1248,6 +1229,14 @@ function App() {
 
 
       <main className="main-content">
+
+        <section className="project-intro" aria-label="About ProjectFlow">
+          <div>
+            <strong>About this project</strong>
+            <p>ProjectFlow is a project-status dashboard for following work from requirements through approvals, development, QA, UAT and release. It brings stage, status, priority, owner and deadline into one view.</p>
+          </div>
+          <a href="https://raghulanandan.in/#case-study" target="_blank" rel="noreferrer">Read the case study ↗</a>
+        </section>
 
         {/* PAGE TITLE */}
         <div className="page-title">
@@ -1633,21 +1622,7 @@ function App() {
 
           <div className="table-container">
 
-            {loading ? (
-
-              <div className="load-state" role="status">
-                <strong>Loading project data...</strong>
-                {slowLoading && <p>The data service is starting after a quiet period. This can take about a minute. The project overview above is available now.</p>}
-              </div>
-
-            ) : loadError ? (
-              <div className="load-state" role="alert">
-                <strong>Project data could not be loaded.</strong>
-                <p>The project overview and case study are still available. Please try loading the data again.</p>
-                <button type="button" onClick={retryLoading}>Retry loading</button>
-              </div>
-
-            ) : filteredProjects.length === 0 ? (
+            {filteredProjects.length === 0 ? (
 
               <div
                 style={{
